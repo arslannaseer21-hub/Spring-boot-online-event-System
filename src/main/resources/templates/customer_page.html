@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Customer Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <!-- 🔹 Logout Button (Top Right) -->
+    <div class="d-flex justify-content-end mb-3">
+        <form method="post" th:action="@{/logout}">
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+    </div>
+    <h2 class="text-center">Customer Dashboard</h2>
+
+    <!-- Display Message -->
+    <div th:if="${message}" class="alert alert-info text-center">
+        <p th:text="${message}"></p>
+    </div>
+
+    <!-- 1️⃣ List of All Events -->
+    <h3>Available Events</h3>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Event Name</th>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="event : ${events}">
+            <td th:text="${event.name}"></td>
+            <td th:text="${event.date}"></td>
+            <td th:text="${event.location}"></td>
+            <td>
+                <form method="get" th:action="@{event/register_customer}">
+                    <input type="hidden" name="eventName" id="eventName" th:value="${event.name}">
+                    <button type="submit" class="btn btn-info btn-sm"> Register </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- 2️⃣ List of Registered Events -->
+    <h3>My Registered Events</h3>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Event Name</th>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="event : ${session.registeredEvents}">
+            <td th:text="${event.name}"></td>
+            <td th:text="${event.date}"></td>
+            <td th:text="${event.location}"></td>
+            <td>
+             <!--   <a th:href="@{/events/unregister(eventName=${event.name}, username=${customer.username})}" class="btn btn-danger btn-sm">
+                    Unregister
+                </a> -->
+
+                <form method="post" th:action="@{event/unregister_event}" >
+                    <input type="hidden" name="eventNameUnReg" id="eventNameUnReg" th:value="${event.name}">
+                    <button type="submit" class="btn btn-danger btn-sm"> Unregister </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
